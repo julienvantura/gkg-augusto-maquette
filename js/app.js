@@ -7,6 +7,28 @@
   if (!animOn) document.body.classList.add("no-anim");
   if (hasGsap) gsap.registerPlugin(ScrollTrigger);
 
+  /* ================= THÈME CLAIR / SOMBRE ================= */
+  (function(){
+    var KEY = "gkg_theme";
+    var saved = null;
+    try { saved = localStorage.getItem(KEY); } catch (e) {}
+    function apply(t){
+      var nav = document.querySelector(".nav");
+      if (t === "light") document.documentElement.setAttribute("data-theme", "light");
+      else document.documentElement.removeAttribute("data-theme");
+      document.querySelectorAll("[data-theme-toggle]").forEach(function(b){ b.setAttribute("aria-pressed", String(t === "light")); });
+      if (nav) { nav.style.display = "none"; void nav.offsetHeight; nav.style.display = ""; }
+    }
+    apply(saved === "light" ? "light" : "dark");
+    document.querySelectorAll("[data-theme-toggle]").forEach(function(btn){
+      btn.addEventListener("click", function(){
+        var next = document.documentElement.getAttribute("data-theme") === "light" ? "dark" : "light";
+        apply(next);
+        try { localStorage.setItem(KEY, next); } catch (e) {}
+      });
+    });
+  })();
+
   /* ================= LENIS ================= */
   var lenis = null;
   if (animOn && typeof Lenis !== "undefined") {
@@ -18,24 +40,6 @@
   function toTop(){
     if (lenis) lenis.scrollTo(0, { immediate: true });
     window.scrollTo(0, 0);
-  }
-
-  /* ================= CURSEUR CUSTOM ================= */
-  if (animOn && finePointer) {
-    document.body.classList.add("has-cursor");
-    var dot = document.querySelector(".cursor-dot");
-    var ring = document.querySelector(".cursor-ring");
-    var dx = gsap.quickTo(dot, "x", { duration: .08, ease: "power2.out" });
-    var dy = gsap.quickTo(dot, "y", { duration: .08, ease: "power2.out" });
-    var rx = gsap.quickTo(ring, "x", { duration: .32, ease: "power2.out" });
-    var ry = gsap.quickTo(ring, "y", { duration: .32, ease: "power2.out" });
-    window.addEventListener("mousemove", function(e){ dx(e.clientX); dy(e.clientY); rx(e.clientX); ry(e.clientY); });
-    document.addEventListener("mouseover", function(e){
-      if (e.target.closest("a, button, summary, input, textarea, .chip")) ring.classList.add("is-link");
-    });
-    document.addEventListener("mouseout", function(e){
-      if (e.target.closest("a, button, summary, input, textarea, .chip")) ring.classList.remove("is-link");
-    });
   }
 
   /* ================= BOUTONS MAGNÉTIQUES ================= */
