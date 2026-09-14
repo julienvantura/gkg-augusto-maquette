@@ -124,6 +124,32 @@
   }
   if (rp && rx2) { rp.addEventListener("input", calc); rx2.addEventListener("input", calc); calc(); }
 
+
+  /* ---------- fiche ingrédients : tap (mobile) / survol (desktop) ---------- */
+  document.querySelectorAll(".pizza-card .fiche-toggle").forEach(function(btn){
+    var card = btn.closest(".pizza-card");
+    var fiche = card.querySelector(".fiche");
+    btn.addEventListener("click", function(e){
+      e.stopPropagation();
+      var open = !card.classList.contains("is-open");
+      document.querySelectorAll(".pizza-card.is-open").forEach(function(c){
+        c.classList.remove("is-open");
+        c.querySelector(".fiche-toggle").setAttribute("aria-expanded", "false");
+        c.querySelector(".fiche").setAttribute("aria-hidden", "true");
+      });
+      card.classList.toggle("is-open", open);
+      btn.setAttribute("aria-expanded", String(open));
+      fiche.setAttribute("aria-hidden", String(!open));
+    });
+  });
+  document.addEventListener("click", function(e){
+    if (e.target.closest(".pizza-card")) return;
+    document.querySelectorAll(".pizza-card.is-open").forEach(function(c){
+      c.classList.remove("is-open");
+      c.querySelector(".fiche-toggle").setAttribute("aria-expanded", "false");
+      c.querySelector(".fiche").setAttribute("aria-hidden", "true");
+    });
+  });
   /* ================= FORMULAIRE → MAILTO ================= */
   var form = document.getElementById("contactForm");
   if (form) form.addEventListener("submit", function(e){

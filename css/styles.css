@@ -348,6 +348,36 @@
   .gamme{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--green);display:inline-flex;align-items:center;gap:8px}
   .gamme::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--green)}
   .gamme.sig{color:#E8C979}.gamme.sig::before{background:#E8C979}
+
+  /* ---------- fiche ingrédients (survol / tap) ---------- */
+  .fiche-toggle{
+    position:absolute;right:14px;top:14px;z-index:3;
+    display:inline-flex;align-items:center;gap:6px;
+    font-family:var(--font-mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;
+    background:rgba(11,11,9,.78);backdrop-filter:blur(6px);border:1px solid var(--line);
+    color:var(--cream);border-radius:999px;padding:8px 12px 8px 10px;cursor:pointer;
+    transition:background .3s,border-color .3s;
+  }
+  .fiche-toggle .plus{font-size:15px;line-height:1;color:var(--green);transition:transform .35s}
+  .fiche-toggle:hover,.pizza-card.is-open .fiche-toggle{border-color:var(--green);background:rgba(11,11,9,.92)}
+  .pizza-card.is-open .fiche-toggle .plus{transform:rotate(45deg)}
+  .fiche{
+    position:absolute;left:0;right:0;bottom:0;z-index:2;
+    background:linear-gradient(180deg, rgba(11,11,9,0) 0%, rgba(11,11,9,.94) 22%, rgba(11,11,9,.97) 100%);
+    transform:translateY(102%);transition:transform .5s cubic-bezier(.2,.8,.2,1);
+    padding:38px 20px 22px;pointer-events:none;
+  }
+  .pizza-card.is-open .fiche{transform:translateY(0);pointer-events:auto}
+  .fiche-base{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--green);display:block;margin-bottom:10px}
+  .fiche ul{list-style:none;display:flex;flex-wrap:wrap;gap:6px}
+  .fiche li{font-size:13px;color:var(--cream);border:1px solid var(--line);border-radius:999px;padding:5px 11px;background:rgba(243,238,227,.05)}
+  .fiche-all{display:block;margin-top:12px;font-size:12px;color:var(--muted)}
+  .fiche-note{display:block;margin-top:8px;font-family:var(--font-mono);font-size:10px;letter-spacing:.06em;color:var(--ember)}
+  @media(hover:hover) and (pointer:fine){
+    .pizza-card:hover .fiche{transform:translateY(0);pointer-events:auto}
+    .pizza-card:hover .fiche-toggle .plus{transform:rotate(45deg)}
+    .pizza-card:hover img{transform:scale(1.07) rotate(2deg)}
+  }
   .pizza-card.intro-card{
     background:linear-gradient(160deg, rgba(141,198,63,.14), rgba(141,198,63,.02) 60%), var(--bg-2);
     display:flex;flex-direction:column;justify-content:space-between;padding:28px;width:min(300px,78vw);
