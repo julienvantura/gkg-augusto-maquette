@@ -270,10 +270,8 @@
   .teaser-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(40px,6vw,80px);align-items:center}
   .fan{position:relative;height:min(420px,68vw);display:flex;align-items:center;justify-content:center}
   .fan img{
-    position:absolute;width:min(300px,52vw);aspect-ratio:1;object-fit:cover;border-radius:50%;
-    -webkit-mask-image:radial-gradient(closest-side,#000 96%,transparent 100%);
-    mask-image:radial-gradient(closest-side,#000 96%,transparent 100%);
-    box-shadow:0 30px 60px rgba(0,0,0,.5);will-change:transform;
+    position:absolute;width:min(300px,52vw);height:auto;
+    filter:drop-shadow(0 30px 40px rgba(0,0,0,.6));will-change:transform;
   }
   .fan img:nth-child(1){transform:translateX(-34%) rotate(-10deg) scale(.92);z-index:1}
   .fan img:nth-child(2){z-index:2}
@@ -312,8 +310,8 @@
     transform-style:preserve-3d;will-change:transform;
   }
   .pizza-card:hover{border-color:rgba(141,198,63,.4)}
-  .pizza-card .ph{aspect-ratio:1/1.02;overflow:hidden;background:#000}
-  .pizza-card img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .8s cubic-bezier(.2,.8,.2,1)}
+  .pizza-card .ph{aspect-ratio:1/1.02;overflow:hidden;background:radial-gradient(70% 60% at 50% 45%, #1F1E18 0%, #0B0B09 100%);display:flex;align-items:center;justify-content:center;padding:8%}
+  .pizza-card img{width:100%;height:auto;display:block;filter:drop-shadow(0 22px 26px rgba(0,0,0,.65));transition:transform .8s cubic-bezier(.2,.8,.2,1)}
   .pizza-card:hover img{transform:scale(1.07) rotate(2deg)}
   .pizza-card .meta{padding:18px 20px 22px;display:flex;flex-direction:column;gap:6px}
   .pizza-card h3{font-family:var(--font-display);font-weight:400;text-transform:uppercase;font-size:22px;letter-spacing:.02em}
