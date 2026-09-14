@@ -117,35 +117,23 @@
     </div>
   </div>
 
-  <!-- scène cinématique : la sortie du four -->
-  <div class="ovenscene" id="ovenScene">
-    <div class="oven-stagewrap" id="ovenStage">
-      <p class="eyebrow center oven-eyebrow">L'expérience Augusto</p>
-      <div class="oven-timer" id="ovenTimer" aria-hidden="true">2:00</div>
-      <div class="oven-stage">
-        <div class="pizza-lift">
-          <img id="ovenPizza" src="assets/img/pizza-reine-augusto-sortant-du-four-fumante.jpg" alt="Pizza Reine Augusto sortant du four, fumante">
+  <!-- film : le four UNO s'ouvre sur la pizza -->
+  <div class="film" id="filmScene">
+    <div class="wrap">
+      <p class="eyebrow center reveal">L'expérience Augusto</p>
+      <div class="film-frame reveal">
+        <div class="film-screen">
+          <video class="film-video" id="filmVideo" muted playsinline loop preload="metadata" poster="assets/video/four-augusto-poster.jpg" aria-label="Le four Augusto UNO s'ouvre sur une pizza tout juste cuite">
+            <source src="assets/video/four-augusto.webm" type="video/webm">
+            <source src="assets/video/four-augusto.mp4" type="video/mp4">
+          </video>
         </div>
-        <canvas class="steam-canvas" id="steamCanvas" aria-hidden="true"></canvas>
-        <div class="oven-slot" aria-hidden="true">
-          <span class="glow" id="ovenGlow"></span>
-          <span class="slit"></span>
-        </div>
-        <div class="oven-base" aria-hidden="true"></div>
+        <button class="film-sound" type="button" id="filmReplay" aria-label="Relancer le film">↻ Revoir</button>
       </div>
-      <div class="oven-caps" id="ovenCaps">
-        <div class="oven-cap" data-cap="0">
-          <span class="t">0:00 — Congélateur</span>
-          <span class="x">La pizza sort du congélateur, pré-assemblée sous blister.</span>
-        </div>
-        <div class="oven-cap" data-cap="1">
-          <span class="t">0:40 — Four UNO</span>
-          <span class="x">Le four fait le travail. <em>Personne derrière.</em></span>
-        </div>
-        <div class="oven-cap" data-cap="2">
-          <span class="t">2:00 — Service</span>
-          <span class="x"><em>Fumante, prête à servir.</em> Votre client n'attend pas.</span>
-        </div>
+      <div class="film-caps reveal">
+        <div class="film-cap"><span class="t">0:00</span><span class="x">Sous blister, direct du congélateur.</span></div>
+        <div class="film-cap"><span class="t">2:00</span><span class="x">Le four UNO fait le travail. <em>Personne derrière.</em></span></div>
+        <div class="film-cap"><span class="t">Service</span><span class="x"><em>Fumante, prête à servir.</em> Votre client n'attend pas.</span></div>
       </div>
     </div>
   </div>

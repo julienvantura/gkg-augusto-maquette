@@ -106,6 +106,21 @@
     ctx.globalAlpha = 1;
   };
 
+  /* ---------- film : lecture muette quand visible, pause hors écran ---------- */
+  var filmObservers = [];
+  function setupFilm(video, replayBtn){
+    if (!video) return;
+    video.muted = true;
+    var tryPlay = function(){ var p = video.play(); if (p && p.catch) p.catch(function(){}); };
+    if ("IntersectionObserver" in window) {
+      var io = new IntersectionObserver(function(entries){
+        entries.forEach(function(en){ en.isIntersecting ? tryPlay() : video.pause(); });
+      }, { threshold: .2 });
+      io.observe(video);
+      filmObservers.push(io);
+    } else tryPlay();
+    if (replayBtn) replayBtn.addEventListener("click", function(){ video.currentTime = 0; tryPlay(); });
+  }
   /* ================= SIMULATEUR ================= */
   var rp = document.getElementById("rangePizzas");
   var rx2 = document.getElementById("rangePrix");
@@ -209,7 +224,6 @@
     legal: "Mentions légales — GKG Distribution"
   };
   var current = null;
-  var steamHero = null, steamOven = null;
 
   function parseRoute(){
     var h = location.hash.replace(/^#/, "");
@@ -225,7 +239,6 @@
   function killPageAnims(){
     if (!hasGsap) return;
     ScrollTrigger.getAll().forEach(function(t){ t.kill(); });
-    if (steamOven) { steamOven.stop(); steamOven = null; }
     var rail = document.getElementById("pizzaRail");
     if (rail) { rail.classList.remove("is-pinned"); gsap.set(rail, { clearProps: "transform" }); }
   }
@@ -260,54 +273,8 @@
       scrollTrigger: { trigger: "#page-home .hero", start: "top top", end: "bottom top", scrub: true }
     });
 
-    /* --- scène sortie du four --- */
-    var pizza = document.getElementById("ovenPizza");
-    var timerEl = document.getElementById("ovenTimer");
-    var glow = document.getElementById("ovenGlow");
-    var caps = document.querySelectorAll("#ovenCaps .oven-cap");
-    steamOven = new Steam(document.getElementById("steamCanvas"));
-    steamOven.start();
-    var timerObj = { t: 0 };
-    var capState = -1;
-    function showCap(i){
-      if (capState === i) return;
-      capState = i;
-      caps.forEach(function(c, idx){
-        gsap.to(c, { opacity: idx === i ? 1 : 0, y: idx === i ? 0 : 14, duration: .4, overwrite: "auto" });
-      });
-    }
-    gsap.set(caps, { opacity: 0, y: 14 });
-    gsap.set(pizza, { yPercent: 106 });
-    gsap.set(glow, { opacity: .25 });
-    timerEl.textContent = "0:00";
-
-    var sceneTl = gsap.timeline({
-      scrollTrigger: {
-        trigger: "#ovenScene",
-        start: "top top",
-        end: "+=230%",
-        pin: "#ovenStage",
-        scrub: .6,
-        onUpdate: function(self){
-          var p = self.progress;
-          steamOven.intensity = p < .3 ? 0 : Math.min(1, (p - .3) / .45);
-          showCap(p < .3 ? 0 : (p < .68 ? 1 : 2));
-        },
-        onLeave: function(){ steamOven.intensity = .35; },
-        onEnterBack: function(){ if (steamOven) steamOven.start(); }
-      }
-    });
-    sceneTl.to(timerObj, {
-      t: 120, ease: "none", duration: 1,
-      onUpdate: function(){
-        var s = Math.round(timerObj.t);
-        timerEl.textContent = Math.floor(s / 60) + ":" + ("0" + (s % 60)).slice(-2);
-      }
-    }, 0)
-    .to(glow, { opacity: 1, duration: .3 }, .05)
-    .to(pizza, { yPercent: 0, duration: .55, ease: "power2.inOut" }, .3)
-    .to(pizza, { scale: 1.04, duration: .15, ease: "power1.inOut" }, .85)
-    .to(glow, { opacity: .4, duration: .25 }, .75);
+    /* --- film du four : autoplay muet quand il entre à l'écran --- */
+    setupFilm(document.getElementById("filmVideo"), document.getElementById("filmReplay"));
 
     /* --- fan de pizzas (teaser) --- */
     var fanImgs = document.querySelectorAll("#fan img");
