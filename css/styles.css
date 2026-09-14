@@ -372,7 +372,6 @@
   .fiche ul{list-style:none;display:flex;flex-wrap:wrap;gap:6px}
   .fiche li{font-size:13px;color:var(--cream);border:1px solid var(--line);border-radius:999px;padding:5px 11px;background:rgba(243,238,227,.05)}
   .fiche-all{display:block;margin-top:12px;font-size:12px;color:var(--muted)}
-  .fiche-note{display:block;margin-top:8px;font-family:var(--font-mono);font-size:10px;letter-spacing:.06em;color:var(--ember)}
   @media(hover:hover) and (pointer:fine){
     .pizza-card:hover .fiche{transform:translateY(0);pointer-events:auto}
     .pizza-card:hover .fiche-toggle .plus{transform:rotate(45deg)}
