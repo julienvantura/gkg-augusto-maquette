@@ -231,6 +231,9 @@
   }
 
   /* ---- reveals génériques pour la page affichée ---- */
+  var INTRO_DELAY = 0;
+  var introUsed = false;
+  function introDelayOnce(){ if (introUsed) return 0; introUsed = true; return INTRO_DELAY; }
   function initReveals(pageEl){
     pageEl.querySelectorAll(".reveal").forEach(function(el){
       gsap.fromTo(el, { y: 44, opacity: 0 }, {
@@ -242,7 +245,7 @@
 
   /* ---- HOME ---- */
   function initHome(pageEl){
-    var tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+    var tl = gsap.timeline({ defaults: { ease: "power3.out" }, delay: introDelayOnce() });
     tl.fromTo("#heroPizza", { scale: 1.18, opacity: 0 }, { scale: 1, opacity: 1, duration: 1.6, ease: "power2.out" }, 0)
       .fromTo('#page-home [data-r="1"]', { y: 24, opacity: 0 }, { y: 0, opacity: 1, duration: .7 }, .15)
       .fromTo('#page-home [data-r="2"]', { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: .8 }, .3)
@@ -405,42 +408,44 @@
   }
 
   var wipe = document.getElementById("wipe");
-  var navigating = false;
+  /* navigation instantanée entre les pages : pas de transition */
   function go(key){
-    if (key === current || navigating) return;
+    if (key === current) return;
     closeMenu();
-    if (!animOn) {
-      killPageAnims();
-      activate(key);
-      return;
-    }
-    navigating = true;
-    wipe.classList.add("active");
+    killPageAnims();
+    activate(key);
+  }
+
+  /* rideau d'intro : une seule fois, au chargement du site */
+  function intro(){
     var brand = wipe.querySelector(".wipe-brand");
+    var p1 = wipe.querySelector(".p1"), p2 = wipe.querySelector(".p2");
+    wipe.classList.add("active");
+    gsap.set([p1, p2], { scaleY: 1, transformOrigin: "top" });
+    gsap.set(brand, { opacity: 0 });
     var tl = gsap.timeline({
       onComplete: function(){
         wipe.classList.remove("active");
-        gsap.set([wipe.querySelector(".p1"), wipe.querySelector(".p2")], { scaleY: 0, transformOrigin: "bottom" });
-        gsap.set(brand, { opacity: 0 });
-        navigating = false;
+        gsap.set([p1, p2], { scaleY: 0 });
       }
     });
-    tl.set([wipe.querySelector(".p1"), wipe.querySelector(".p2")], { scaleY: 0, transformOrigin: "bottom" })
-      .to(wipe.querySelector(".p1"), { scaleY: 1, duration: .42, ease: "power4.inOut" }, 0)
-      .to(wipe.querySelector(".p2"), { scaleY: 1, duration: .42, ease: "power4.inOut" }, .09)
-      .to(brand, { opacity: 1, duration: .25 }, .32)
-      .add(function(){
-        killPageAnims();
-        activate(key);
-      }, .58)
-      .to(brand, { opacity: 0, duration: .2 }, .95)
-      .set([wipe.querySelector(".p1"), wipe.querySelector(".p2")], { transformOrigin: "top" }, 1.05)
-      .to(wipe.querySelector(".p2"), { scaleY: 0, duration: .5, ease: "power4.inOut" }, 1.08)
-      .to(wipe.querySelector(".p1"), { scaleY: 0, duration: .5, ease: "power4.inOut" }, 1.17);
+    tl.to(brand, { opacity: 1, duration: .45, ease: "power2.out" }, .15)
+      .to(brand, { opacity: 0, y: -14, duration: .3 }, 1.05)
+      .to(p2, { scaleY: 0, duration: .6, ease: "power4.inOut" }, 1.2)
+      .to(p1, { scaleY: 0, duration: .6, ease: "power4.inOut" }, 1.3);
   }
 
   window.addEventListener("hashchange", function(){ go(parseRoute()); });
 
-  /* premier rendu, sans transition */
+  /* premier rendu : intro puis page */
+  INTRO_DELAY = animOn ? 1.35 : 0;
+  if (animOn) intro();
   activate(parseRoute());
+  /* filet de sécurité : si le ticker GSAP est gelé (onglet en arrière-plan), on lève le rideau quand même */
+  setTimeout(function(){
+    if (wipe.classList.contains("active")) {
+      wipe.classList.remove("active");
+      if (hasGsap) gsap.set(wipe.querySelectorAll(".wipe-panel"), { scaleY: 0 });
+    }
+  }, 3200);
 })();
